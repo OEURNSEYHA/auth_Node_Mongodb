@@ -5,6 +5,6 @@ mongoose.connect(process.env.MONGOURL)
 .then((result) => {
     console.log("connect successfully")
 }).catch((req, res,err) => {
-    res.json({message: err});
+    console.log(err)
 
 });
