@@ -4,7 +4,7 @@ require('dotenv').config();
 mongoose.connect(process.env.MONGOURL)
 .then((result) => {
     console.log("connect successfully")
-}).catch((err) => {
+}).catch((req, res,err) => {
     res.json({message: err});
 
 });
