@@ -1,10 +1,13 @@
-const mongoose = require('mongoose');
-require('dotenv').config();
+const mongoose = require("mongoose");
 
-mongoose.connect(process.env.MONGOURL)
-.then((result) => {
-    console.log("connect successfully")
-}).catch((req, res,err) => {
-    console.log(err)
+require("dotenv").config();
 
-});
+mongoose
+  .connect(process.env.MONGOURL)
+  .then((result) => {
+    console.log("connect successfully");
+  })
+  .catch((req, res, err) => {
+    res.json({error: err})
+  });
+
