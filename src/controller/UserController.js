@@ -63,6 +63,16 @@ const UserController = {
       res.json({ error: err.message });
     }
   },
+
+  logout: async (req, res) => {
+    res.cookie("accessToken", "", {
+      expires: new Date(0), // Expire immediately
+      httpOnly: true,
+      secure: true,
+      sameSite: "Strict",
+    });
+    res.json({ message: "Token expired" });
+  }
 };
 
 module.exports = UserController;
