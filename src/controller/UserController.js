@@ -73,6 +73,7 @@ const UserController = {
     });
     res.json({ message: "Token expired" });
   }
+  
 };
 
 module.exports = UserController;
