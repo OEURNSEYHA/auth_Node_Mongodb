@@ -4,6 +4,9 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
+
+
+
 const { JWT_SECRET, ACCESS_TOKEN_EXPIRATION, COOKIE_EXPIRATION } = process.env;
 const createToken = (_id, email, password) => {
   return jwt.sign({ _id, email, password }, JWT_SECRET, {

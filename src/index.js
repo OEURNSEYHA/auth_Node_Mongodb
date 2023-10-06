@@ -15,7 +15,7 @@ app.use(cookieParser());
 
 const options = {
   definition: {
-    openapi: "3.0.0",
+    openapi: "3.0.3",
     info: {
       title: "Node Js API Project for mongodb",
       version: "1.0.0",
@@ -26,10 +26,52 @@ const options = {
         
       },
     ],
+    paths: {
+        '/users': {
+          get: {
+            summary: 'Get all users',
+            responses: {
+              '200': {
+                description: 'OK',
+                content: {
+                  'application/json': {
+                    schema: {
+                      type: 'array',
+                      items: {
+                        $ref: '',
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+        '/user/register': {
+            post: {
+              summary: 'and new users',
+              responses: {
+                '200': {
+                  description: 'OK',
+                  content: {
+                    'application/json': {
+                      schema: {
+                        type: 'array',
+                        items: {
+                          $ref: '',
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+      },
    
   },
   apis: ["../src/router/userRouter.js"],
-  module: ['./model/Users.js']
+ 
 };
 
 const swaggerSpec = swaggerJsDoc(options);
