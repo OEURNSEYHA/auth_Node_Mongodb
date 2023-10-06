@@ -3,6 +3,7 @@ const cors = require("cors");
 const app = express();
 const swaggerJsDoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
+const options = require('./utils/swagger')
 require("dotenv").config();
 require("../config/config");
 app.use(express.json());
@@ -13,66 +14,6 @@ const userRoute = require("./router/userRouter");
 app.use(userRoute);
 app.use(cookieParser());
 
-const options = {
-  definition: {
-    openapi: "3.0.3",
-    info: {
-      title: "Node Js API Project for mongodb",
-      version: "1.0.0",
-    },
-    servers: [
-      {
-        url: "http://localhost:8080/",
-        
-      },
-    ],
-    paths: {
-        '/users': {
-          get: {
-            summary: 'Get all users',
-            responses: {
-              '200': {
-                description: 'OK',
-                content: {
-                  'application/json': {
-                    schema: {
-                      type: 'array',
-                      items: {
-                        $ref: '',
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          },
-        },
-        '/user/register': {
-            post: {
-              summary: 'and new users',
-              responses: {
-                '200': {
-                  description: 'OK',
-                  content: {
-                    'application/json': {
-                      schema: {
-                        type: 'array',
-                        items: {
-                          $ref: '',
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          },
-      },
-   
-  },
-  apis: ["../src/router/userRouter.js"],
- 
-};
 
 const swaggerSpec = swaggerJsDoc(options);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
