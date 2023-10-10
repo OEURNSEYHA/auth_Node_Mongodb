@@ -7,9 +7,11 @@ const requireCookieToken = (req, res, next) => {
   // Use cookie-parser middleware to parse cookies
   cookieParser()(req, res, () => {
     const token = req.cookies.accessToken; // Replace with the name of your authentication token cookie
-console.log(token)
+    console.log(token);
     if (!token) {
-      return res.status(401).json({ error: "Authentication token not found in cookie" });
+      return res
+        .status(401)
+        .json({ error: "Authentication token not found in cookie" });
     }
 
     try {
