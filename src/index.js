@@ -3,11 +3,22 @@ const cors = require("cors");
 const app = express();
 const swaggerJsDoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
-const options = require('./utils/swagger')
+const options = require('./utils/swagger');
+const allowedOrigins = ['http://localhost:3000'];
+
 require("dotenv").config();
 require("../config/config");
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true, // Allow credentials (cookies)
+}));
 const cookieParser = require("cookie-parser");
 const userRoute = require("./router/userRouter");
 
