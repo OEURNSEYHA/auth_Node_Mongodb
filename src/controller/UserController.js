@@ -59,7 +59,7 @@ const UserController = {
         expires: expirationTime,
         httpOnly: true,
         secure: true, // Make sure to set this for HTTPS
-        sameSite: "Strict", // Recommended for added security
+        sameSite: "Strict", // Recommended for added security   
       });
       return res.json({ token: token, message: "Login Success" });
     } catch (err) {

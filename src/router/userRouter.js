@@ -11,6 +11,6 @@ const upload = multer();
 router.get('/users' ,requireCookieToken, UserController.gets);
 router.post("/user/register", upload.none(), UserController.register)
 router.post("/user/login", upload.none(), UserController.login)
-router.get("/logout", UserController.logout)
+router.post("/logout", UserController.logout)
 
 module.exports  = router
