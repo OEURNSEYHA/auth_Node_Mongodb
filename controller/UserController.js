@@ -24,12 +24,24 @@ const UserController = {
   register: async (req, res) => {
     try {
       const { name, email, password } = req.body;
+      const { filename, path } = req.file;
+      console.log(path);
       if (!name || !email || !password) throw Error("Please Input Failed");
       if (!isEmail(email)) throw Error("Email Invalid");
       if (!isStrongPassword(password)) throw Error("Password Not Strong");
       const salt = await bcrypt.genSalt();
       const hashPassword = await bcrypt.hash(password, salt);
-      const user = await Users.create({ name, email, password: hashPassword });
+      if (!filename) {
+        throw new Error("Please input file");
+      }
+
+      const dataInsert = {
+        name,
+        email,
+        password: hashPassword,
+        image: filename,
+      };
+      const user = await Users.create(dataInsert);
       res.json(user);
     } catch (err) {
       res.json({ error: err.message });
@@ -46,7 +58,7 @@ const UserController = {
       if (!isPasswordValid) throw Error("Password Invalid");
       const token = createToken(user._id, user.email, user.password);
       // Calculate the expiration time (e.g., 1 hour from now)
-      
+
       const expirationTime = new Date(
         Date.now() + COOKIE_EXPIRATION * 24 * 60 * 60 * 1000
       );
@@ -68,29 +80,32 @@ const UserController = {
   update: async (req, res) => {
     try {
       const id = req.params.id;
-      const { email } = req.body;
-      console.log(email)
-  
+      const { name, email } = req.body;
+
+      const dataUpdate = { name, email };
+      console.log(email);
+
       if (!id) {
         throw new Error("Invalid user ID");
       }
-  
+
       if (!email) {
         throw new Error("Email is required");
       }
-  
-      const userUpdate = await Users.findByIdAndUpdate(id, { email }, { new: true });
-  
+
+      const userUpdate = await Users.findByIdAndUpdate(id, dataUpdate, {
+        new: true,
+      });
+
       if (!userUpdate) {
         throw new Error("User not found");
       }
-  
+
       res.json({ message: id, userUpdate });
     } catch (err) {
       res.status(400).json({ error: err.message });
     }
   },
-  
 
   logout: async (req, res) => {
     res.cookie("accessToken", "", {
