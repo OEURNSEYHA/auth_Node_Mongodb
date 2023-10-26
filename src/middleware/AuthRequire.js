@@ -13,7 +13,6 @@ const requireCookieToken = (req, res, next) => {
         .status(401)
         .json({ error: "Authentication token not found in cookie" });
     }
-
     try {
       const decodedToken = jwt.verify(token, JWT_SECRET);
       req.user = decodedToken; // You can access the decoded token in subsequent middleware or routes

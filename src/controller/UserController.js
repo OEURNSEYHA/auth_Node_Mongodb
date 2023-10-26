@@ -4,9 +4,6 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
-
-
-
 const { JWT_SECRET, ACCESS_TOKEN_EXPIRATION, COOKIE_EXPIRATION } = process.env;
 const createToken = (_id, email, password) => {
   return jwt.sign({ _id, email, password }, JWT_SECRET, {
@@ -49,6 +46,7 @@ const UserController = {
       if (!isPasswordValid) throw Error("Password Invalid");
       const token = createToken(user._id, user.email, user.password);
       // Calculate the expiration time (e.g., 1 hour from now)
+      
       const expirationTime = new Date(
         Date.now() + COOKIE_EXPIRATION * 24 * 60 * 60 * 1000
       );
@@ -59,13 +57,40 @@ const UserController = {
         expires: expirationTime,
         httpOnly: true,
         secure: true, // Make sure to set this for HTTPS
-        sameSite: "Strict", // Recommended for added security   
+        sameSite: "Strict", // Recommended for added security
       });
-      return res.json({ token: token, message: "Login Success" });
+      return res.json({ user, token: token, message: "Login Success" });
     } catch (err) {
       res.json({ error: err.message });
     }
   },
+
+  update: async (req, res) => {
+    try {
+      const id = req.params.id;
+      const { email } = req.body;
+      console.log(email)
+  
+      if (!id) {
+        throw new Error("Invalid user ID");
+      }
+  
+      if (!email) {
+        throw new Error("Email is required");
+      }
+  
+      const userUpdate = await Users.findByIdAndUpdate(id, { email }, { new: true });
+  
+      if (!userUpdate) {
+        throw new Error("User not found");
+      }
+  
+      res.json({ message: id, userUpdate });
+    } catch (err) {
+      res.status(400).json({ error: err.message });
+    }
+  },
+  
 
   logout: async (req, res) => {
     res.cookie("accessToken", "", {
@@ -75,8 +100,7 @@ const UserController = {
       sameSite: "Strict",
     });
     res.json({ message: "Token expired" });
-  }
-  
+  },
 };
 
 module.exports = UserController;

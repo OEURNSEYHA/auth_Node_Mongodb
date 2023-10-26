@@ -9,6 +9,8 @@ const allowedOrigins = ['http://localhost:3000'];
 require("dotenv").config();
 require("../config/config");
 app.use(express.json());
+
+
 app.use(cors({
   origin: function (origin, callback) {
     if (!origin || allowedOrigins.includes(origin)) {
@@ -24,10 +26,11 @@ const userRoute = require("./router/userRouter");
 
 app.use(userRoute);
 app.use(cookieParser());
-
-
 const swaggerSpec = swaggerJsDoc(options);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+
+
 
 app.listen(process.env.PORT, (err) => {
   if (err) {
