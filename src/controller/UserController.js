@@ -21,26 +21,42 @@ const UserController = {
     }
   },
 
+  // Define your route for registration with multiple image uploads
   register: async (req, res) => {
     try {
       const { name, email, password } = req.body;
-      const { filename, path } = req.file;
-      console.log(path);
-      if (!name || !email || !password) throw Error("Please Input Failed");
-      if (!isEmail(email)) throw Error("Email Invalid");
-      if (!isStrongPassword(password)) throw Error("Password Not Strong");
-      const salt = await bcrypt.genSalt();
-      const hashPassword = await bcrypt.hash(password, salt);
-      if (!filename) {
-        throw new Error("Please input file");
+      const imageFiles = req.files;
+      // const thumbnail = req.file;
+
+      if (!name || !email || !password) {
+        throw new Error("Please Input Failed");
       }
 
+      if (!isEmail(email)) {
+        throw new Error("Email Invalid");
+      }
+
+      if (!isStrongPassword(password)) {
+        throw new Error("Password Not Strong");
+      }
+
+      if (imageFiles.length === 0) {
+        throw new Error("Please upload at least one image");
+      }
+
+      const salt = await bcrypt.genSalt();
+      const hashPassword = await bcrypt.hash(password, salt);
+
+      const imageFileNames = imageFiles.map((file) => file.filename);
+      // const image = imageFiles[0];
       const dataInsert = {
         name,
         email,
         password: hashPassword,
-        image: filename,
+        images: imageFileNames, // Store the image filenames in your database
+        thumbnail: imageFileNames[0]
       };
+
       const user = await Users.create(dataInsert);
       res.json(user);
     } catch (err) {
@@ -81,7 +97,6 @@ const UserController = {
     try {
       const id = req.params.id;
       const { name, email } = req.body;
-
       const dataUpdate = { name, email };
       console.log(email);
 

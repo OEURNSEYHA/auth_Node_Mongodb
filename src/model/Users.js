@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-
 const userShcema = mongoose.Schema(
   {
     name: {
@@ -14,9 +13,15 @@ const userShcema = mongoose.Schema(
       type: String,
       required: true,
     },
-    image: {
+    images: [
+      {
+        type: String, // Store the image URLs in an array
+        required: true,
+      },
+    ],
+    thumbnail: {
       type: String,
-      require: true,
+      
     },
   },
   {
