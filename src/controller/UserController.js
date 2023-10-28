@@ -22,45 +22,48 @@ const UserController = {
   },
 
   // Define your route for registration with multiple image uploads
-  register: async (req, res) => {
+  register : async (req, res) => {
     try {
       const { name, email, password } = req.body;
-      const imageFiles = req.files;
-      // const thumbnail = req.file;
-
+      const thumbnail = req.files['thumbnail'][0].filename;
+      const images = req.files['images'].map((image) => image.filename);
+  
       if (!name || !email || !password) {
-        throw new Error("Please Input Failed");
+        throw new Error('Please provide all required information');
       }
-
+  
       if (!isEmail(email)) {
-        throw new Error("Email Invalid");
+        throw new Error('Invalid email format');
       }
-
+  
       if (!isStrongPassword(password)) {
-        throw new Error("Password Not Strong");
+        throw new Error('Password is not strong enough');
       }
-
-      if (imageFiles.length === 0) {
-        throw new Error("Please upload at least one image");
+  
+      if (!thumbnail) {
+        throw new Error('Please upload a thumbnail');
       }
-
+  
+      if (!images || images.length === 0) {
+        throw new Error('Please upload at least one image');
+      }
+  
       const salt = await bcrypt.genSalt();
       const hashPassword = await bcrypt.hash(password, salt);
-
-      const imageFileNames = imageFiles.map((file) => file.filename);
-      // const image = imageFiles[0];
-      const dataInsert = {
-        name,
-        email,
-        password: hashPassword,
-        images: imageFileNames, // Store the image filenames in your database
-        thumbnail: imageFileNames[0]
-      };
-
-      const user = await Users.create(dataInsert);
-      res.json(user);
+  
+      // Use the `create` method to create and save the user
+    const newUser = await Users.create({
+      name,
+      email,
+      password: hashPassword,
+      thumbnail,
+      images,
+    });
+  
+      const savedUser = await newUser.save();
+      res.status(201).json(savedUser);
     } catch (err) {
-      res.json({ error: err.message });
+      res.status(400).json({ error: err.message });
     }
   },
 
