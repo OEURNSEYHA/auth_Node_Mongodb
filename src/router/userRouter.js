@@ -29,4 +29,5 @@ router.post("/user/login", upload.none(), UserController.login);
 router.put("/user/update/:id", upload.none(), UserController.update);
 router.post("/logout", UserController.logout);
 router.post("/forgot/passwor", () => {});
+router.post("/reset/password", ()=> {});
 module.exports = router;
