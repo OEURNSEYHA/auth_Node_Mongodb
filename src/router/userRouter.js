@@ -16,13 +16,17 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 const uploadFields = [
   { name: "images", maxCount: 5 },
-  {name: "thumbnail", maxCount: 1}
+  { name: "thumbnail", maxCount: 1 },
 ];
 
 router.get("/users", UserController.gets);
-router.post("/user/register", upload.fields(uploadFields), UserController.register);
+router.post(
+  "/user/register",
+  upload.fields(uploadFields),
+  UserController.register
+);
 router.post("/user/login", upload.none(), UserController.login);
 router.put("/user/update/:id", upload.none(), UserController.update);
 router.post("/logout", UserController.logout);
-
+router.post("/forgot/passwor", () => {});
 module.exports = router;
